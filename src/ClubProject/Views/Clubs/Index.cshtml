@@ -1,0 +1,47 @@
+﻿@model IEnumerable<ClubProject.Models.Club>
+
+@{
+    ViewBag.Title = "لیست باشگاه ها";
+    Layout = "_Layout";
+}
+
+<h2>لیست باشگاه ها</h2>
+
+<div class="table-responsive">
+    <table class="table">
+        <thead>
+        <tr>
+            <th>عکس باشگاه</th>
+            <th class="text-center">نام باشگاه</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var club in Model)
+        {
+            <tr>
+                <td>
+                    <img class="img-thumbnail" width="150" height="150" alt="@club.Name" src="~/pictures/@club.Pictures.Single(p => p.IsCoverPicture).PictureName"/>
+
+                </td>
+                <td>
+                    <div class="text-center">@club.Name</div>
+                </td>
+                <td>
+                    <div style="float: left">
+                        <a asp-area="" asp-controller="Clubs" asp-action="Edit" asp-route-id="@club.ClubId" class="btn btn-default btn-warning">
+                            <i class="fa fa-edit"></i> ویرایش
+                        </a>
+                        <a asp-area="" asp-controller="Clubs" asp-action="Delete" asp-route-id="@club.ClubId" class="btn btn-default btn-danger">
+                            <i class="fa fa-remove"></i> حذف
+                        </a>
+                        <a asp-area="" asp-controller="Clubs" asp-action="Show" asp-route-id="@club.ClubId" class="btn btn-default btn-info">
+                            <i class="fa fa-info"></i> مشاهده اطلاعات
+                        </a>
+                    </div>
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+</div>

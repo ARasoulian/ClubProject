@@ -1,0 +1,126 @@
+﻿@model ClubProject.ViewModels.ClubViewModel
+
+@{
+    ViewBag.Title = "باشگاه جدید";
+    Layout = "_Layout";
+}
+
+<div class="row">
+    @if (ViewBag.SaveSucceed != null &&ViewBag.SaveSucceed == "yes")
+    {
+        <div class="alert alert-success fade in">
+            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+            <strong>تبریک</strong> باشگاه شما با موفقیت ثبت شد.
+        </div>
+
+    }
+    @if (ViewBag.SaveSucceed != null && ViewBag.SaveSucceed == "no")
+    {
+        <div class="alert alert-danger fade in text-center">
+            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+            <strong>متاسفیم!</strong> ثبت باشگاه شما با خطا مواجه شد
+        </div>
+
+    }
+        <div class="col-md-8 col-md-offset-2">
+            <h2>ثبت باشگاه جدید</h2>
+            <form Method="post" enctype="multipart/form-data" asp-controller="Clubs" asp-action="Create">
+                <div asp-validation-summary="ModelOnly"></div>
+                <div class="form-group">
+                    <label asp-for="Name">نام باشگاه:</label>
+                    <input asp-for="Name" class="form-control" />
+                    <span asp-validation-for="Name" class="text-muted"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="PhoneNumber">شماره تلفن باشگاه:</label>
+                    <input type="tel" asp-for="PhoneNumber" class="form-control" />
+                    <span asp-validation-for="PhoneNumber" class="text-muted"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Address">آدرس باشگاه:</label>
+                    <textarea asp-for="Address" class="form-control"></textarea>
+                    <span asp-validation-for="Address" class="text-muted"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Description">درباره باشگاه:</label>
+                    <textarea asp-for="Description" class="form-control"></textarea>
+                    <span asp-validation-for="Description" class="text-muted"></span>
+                </div>
+                <div class="form-group">
+                    <label>عکس کاور باشگاه:</label>
+                    <input id="coverPicture" type="file" name="coverPicture" class="form-control" accept=".jpg" />
+                </div>
+                <div class="form-group"style="margin-top: 20px">
+                    <label>عکس های گالری باشگاه:</label>
+                    <input style="display: none" id="galleryPictures" type="file" name="galleryPictures" class="form-control" accept=".jpg" multiple />
+                    <a class="btn btn-info col-md-offset-4 col-md-4 col-xs-12" onclick="openBrowseDialog()">انتخاب عکس</a>
+                    <div id="pictureListHeader" class="row" style="margin-top: 50px">
+                        <strong class="col-md-offset-5 col-md-2 col-xs-3" >فعال/غیر فعال</strong>
+                        <strong class="col-md-2 col-xs-3" >اولویت</strong>
+                        <strong class="col-md-3 col-xs-6" >نام عکس</strong>
+                    </div>
+                    <hr/>
+                    <div id="selectedPicturesList">
+                        
+                    </div>
+
+                </div>
+                <div class="form-group">
+                    <a asp-action="Index" asp-controller="Clubs" class="btn btn-default col-md-5 col-xs-6">انصراف</a>
+                    <input type="submit" value="ثبت باشگاه" class="btn btn-success col-md-5 col-md-offset-2 col-xs-6" />
+                </div>
+            </form>
+        </div>
+    </div>
+
+    @section scripts
+{
+        <environment names="Development">
+            <script src="~/lib/jquery-validation/dist/jquery.validate.js"></script>
+            <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>
+        </environment>
+        <environment names="Staging,Production">
+            <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+            <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+        </environment>
+
+        <script type="text/javascript">
+            function openBrowseDialog() {
+                $('#galleryPictures').trigger('click');
+            }
+
+            $("#galleryPictures")
+                .on("change",
+                    function () {
+                        $("#selectedPicturesList").empty();
+                        var selectedFiles = $('#galleryPictures').get(0).files;
+                        for (var i = 0, numFiles = selectedFiles.length; i < numFiles; i++) {
+                            var file = selectedFiles[i];
+                            $("#selectedPicturesList")
+                                .append('<div class="row" style="margin-bottom:20px;">' +
+                                    '<span class="col-md-5 col-xs-12 text-muted field-validation-valid" data-valmsg-for="' + file.name + 'Order" data-valmsg-replace="true"></span>' +
+                                    '<input class="col-md-2 col-xs-3" type="checkbox" id="' + file.name + 'IsActive" name="' + file.name + 'IsActive" checked/>' +
+                                    '<input class="col-md-2 col-xs-3" type="number" id="' + file.name + 'Order" name="' + file.name + 'Order" data-val="true" min="1" step="1"/>' +
+                                    '<label class="col-md-3 col-xs-6">' + file.name + '</label>' +
+                                    '</div>');
+
+                        }
+                    });
+
+        </script>
+
+
+        @*<script type="text/javascript">
+                $("#Pictures").on("change", function () {
+
+                    $("#radioButtons").empty();
+                    var selectedFiles = $('#Pictures').get(0).files;
+                    for (var i = 0, numFiles = selectedFiles.length; i < numFiles; i++) {
+                        var file = selectedFiles[i];
+                        $("#radioButtons").append('<input type="radio" name="DefaultPicture" id="DefaultPicture" value="' + file.name + '"/>' + file.name + '</br>');
+                    }
+                    $('#DefaultPicture').attr( "checked", "true" );
+                });
+            </script>*@
+
+    }
